@@ -50,7 +50,7 @@ public class Game extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.game);
         getSupportActionBar().hide(); // Disapiring of the main bar
 
         hoop = (View) findViewById(R.id.hoop);
@@ -130,7 +130,7 @@ public class Game extends AppCompatActivity {
                     enemy3.setY(-150);
                     updatedAnimation.start();
                 }
-                addScore(weapon03,updatedAnimation);
+                addScore(enemy3,updatedAnimation);
             }
         });
     }
@@ -162,7 +162,7 @@ public class Game extends AppCompatActivity {
             pause();
             s.setPlayerName(name);
             s.setPlayerScore(score);
-            Intent gameActivityIntent = new Intent(GameActivity.this, EndActivity.class);
+            Intent gameActivityIntent = new Intent(Game.this, End.class);
             list.add(s); // adding new user to the list
             Collections.sort(list, new Comparator<Score>() {
                 @Override
@@ -218,7 +218,7 @@ public class Game extends AppCompatActivity {
     public void clickToStop(View view) {
         pause();
         // Opening new window
-        Intent gameActivityIntent = new Intent(GameActivity.this, EndActivity.class);
+        Intent gameActivityIntent = new Intent(Game.this, End.class);
         s.setPlayerName(name);
         s.setPlayerScore(score);
         list.add(s);
