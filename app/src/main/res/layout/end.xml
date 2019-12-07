@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ending"
+    android:gravity="center"
+    tools:context=".End">
+
+    <TextView
+        android:id="@+id/your_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold|italic|normal"
+        android:fontFamily="casual"
+        android:textColor="@android:color/white"
+        android:text=" Your Score is: "/>
+
+    <TextView
+        android:id="@+id/top5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:text=" TOP 5 are ... "
+        android:textStyle="bold|italic|normal"
+        android:fontFamily="casual"
+        android:textColor="@android:color/white"
+        android:textSize="30dp"/>
+
+    <ScrollView
+        android:id="@+id/main_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="30dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/top5">
+
+        <TableLayout
+            android:id="@+id/table"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/btn_restart"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <TableRow>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=" Name: "
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:fontFamily="casual"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=" Score: "
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:fontFamily="casual"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+
+                    android:layout_weight="1">
+                </TextView>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/name_01"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:layout_weight="1">
+                </TextView>
+                <TextView
+                    android:id="@+id/score_01"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"
+                    android:layout_weight="1">
+                </TextView>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/name_02"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"
+                    android:layout_weight="1">
+                </TextView>
+                <TextView
+                    android:id="@+id/score_02"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"
+                    android:layout_weight="1">
+                </TextView>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/name_03"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"
+                    android:layout_weight="1">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/score_03"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"
+                    android:layout_weight="1">
+                </TextView>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/name_04"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"
+                    android:layout_weight="1">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/score_04"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"
+                    android:layout_weight="1">
+                </TextView>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/name_05"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"
+                    android:layout_weight="1">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/score_05"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"
+                    android:layout_weight="1">
+                </TextView>
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+
+
+    <Button
+        android:id="@+id/btn_restart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Restart Game"
+        android:onClick="cliclToRestart"/>
+
+    <Button
+        android:id="@+id/exit"
+        android:padding="10dp"
+        android:paddingBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_restart"
+        android:layout_centerInParent="true"
+        android:onClick="clickExit"
+        android:text=" EXIT "/>
+
+</RelativeLayout>
