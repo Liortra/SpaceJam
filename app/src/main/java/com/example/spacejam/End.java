@@ -90,12 +90,12 @@ public class End extends AppCompatActivity {
 
     //press End Game to finish the game and destroy the progress
     public void clickExit(View view) {
-        finish();
+        moveTaskToBack(true);
         System.exit(0);
     }
 
     public void cliclToRestart(View view) {
-        Intent gameActivityIntent = new Intent(End.this,Login.class);
+        Intent gameActivityIntent = new Intent(End.this,Game.class);
         startActivity(gameActivityIntent);
     }
 

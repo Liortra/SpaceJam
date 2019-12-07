@@ -61,7 +61,7 @@ public class Login extends AppCompatActivity {
 
     //press End Game to finish the game and destroy the progress
     public void clickToExit(View v) {
-       finish();
-       System.exit(0);
+        moveTaskToBack(true);
+        System.exit(0);
     }
 }
