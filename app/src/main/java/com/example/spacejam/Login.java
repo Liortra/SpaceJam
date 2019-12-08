@@ -43,12 +43,6 @@ public class Login extends AppCompatActivity {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String playerName = nameOfPlayer.getText().toString().trim();
-            if(!playerName.isEmpty()){
-                Intent gameIntent = new Intent(Login.this, Game.class);
-                bundle.putString(bundleString, nameOfPlayer.getText().toString());
-                gameIntent.putExtras(bundle);
-                startActivity(gameIntent);
-            }
             play.setEnabled(!playerName.isEmpty());
         }
 
@@ -57,6 +51,14 @@ public class Login extends AppCompatActivity {
 
         }
     };
+
+    public void clickToPlay(View view) {
+        Intent gameActivityIntent = new Intent(Login.this, Game.class);
+        //Add your data to bundle
+        bundle.putString(bundleString, nameOfPlayer.getText().toString());
+        gameActivityIntent.putExtras(bundle);
+        startActivity(gameActivityIntent);
+    }
 
 
     //press End Game to finish the game and destroy the progress
