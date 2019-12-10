@@ -28,8 +28,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Enter Your Name Player"
-        android:textColorHint="#1D0505"
-        android:textColor="#1D0505"
+        android:textColorHint="#fff"
+        android:textColor="#fff"
         android:textStyle="bold|italic"
         android:focusableInTouchMode="true"/>
 
@@ -40,7 +40,7 @@
         android:layout_gravity="fill"
         android:text=" Feel Lucky ? "
         android:textSize="30dp"
-        android:textColor="#1D0505"
+        android:textColor="#fff"
         android:textStyle="bold|italic"
         android:layout_below="@+id/nameOfPlayer"
         android:textAlignment="center">
@@ -65,7 +65,7 @@
             android:text=" 3 "
             android:textSize="30dp"
             android:textStyle="bold|italic"
-            android:textColor="#1D0505"/>
+            android:textColor="#fff"/>
         <RadioButton
             android:id="@+id/radio_4"
             android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
             android:text=" 4 "
             android:textSize="30dp"
             android:textStyle="bold|italic"
-            android:textColor="#1D0505"
+            android:textColor="#fff"
             android:layout_marginHorizontal="20dp"/>
 
         <RadioButton
@@ -83,7 +83,7 @@
             android:text=" 5 "
             android:textSize="30dp"
             android:textStyle="bold|italic"
-            android:textColor="#1D0505"
+            android:textColor="#fff"
             android:layout_marginHorizontal="20dp"/>
     </RadioGroup>
 
