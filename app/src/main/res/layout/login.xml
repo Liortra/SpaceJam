@@ -4,12 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/loginback"
+    android:background="@drawable/spacejam"
     tools:context=".Login">
-
-    // Volume
-
-    // Name
 
     <ImageView
         android:id="@+id/volume"
@@ -32,8 +28,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Enter Your Name Player"
-        android:textColorHint="#fff"
-        android:textColor="#fff"
+        android:textColorHint="#1D0505"
+        android:textColor="#1D0505"
         android:textStyle="bold|italic"
         android:focusableInTouchMode="true"/>
 
@@ -44,7 +40,8 @@
         android:layout_gravity="fill"
         android:text=" Feel Lucky ? "
         android:textSize="30dp"
-        android:textColor="#fff"
+        android:textColor="#1D0505"
+        android:textStyle="bold|italic"
         android:layout_below="@+id/nameOfPlayer"
         android:textAlignment="center">
     </TextView>
@@ -67,16 +64,16 @@
             android:outlineAmbientShadowColor="@android:color/white"
             android:text=" 3 "
             android:textSize="30dp"
-            android:textStyle="bold"
-            android:textColor="#fff"/>
+            android:textStyle="bold|italic"
+            android:textColor="#1D0505"/>
         <RadioButton
             android:id="@+id/radio_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" 4 "
             android:textSize="30dp"
-            android:textStyle="bold"
-            android:textColor="#fff"
+            android:textStyle="bold|italic"
+            android:textColor="#1D0505"
             android:layout_marginHorizontal="20dp"/>
 
         <RadioButton
@@ -85,8 +82,8 @@
             android:layout_height="wrap_content"
             android:text=" 5 "
             android:textSize="30dp"
-            android:textStyle="bold"
-            android:textColor="#fff"
+            android:textStyle="bold|italic"
+            android:textColor="#1D0505"
             android:layout_marginHorizontal="20dp"/>
     </RadioGroup>
 
@@ -108,7 +105,5 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text=" EXIT "/>
-
-
 
 </RelativeLayout>

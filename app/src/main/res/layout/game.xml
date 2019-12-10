@@ -8,7 +8,6 @@
     android:paddingBottom="15dp"
     tools:context=".Game">
 
-
     <ImageView
         android:id="@+id/life01"
         android:layout_width="50dp"
