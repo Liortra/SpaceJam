@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +42,14 @@ public class Login extends AppCompatActivity {
         bundle = new Bundle();
         volume = (ImageView) findViewById(R.id.volume);
 
+        nameOfPlayer.setOnTouchListener(new View.OnTouchListener(){
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                nameOfPlayer.setHint("");
+                return false;
+            }
+        });
         nameOfPlayer.addTextChangedListener(watcher);
     }
 
@@ -76,6 +85,8 @@ public class Login extends AppCompatActivity {
     public void clickToExit(View v) {
         moveTaskToBack(true);
         System.exit(0);
+
+        finish();
     }
 
     // Set volume ON/OFF
