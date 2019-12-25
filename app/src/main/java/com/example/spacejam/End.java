@@ -11,6 +11,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,8 +30,9 @@ public class End extends AppCompatActivity {
     Gson gson;
     String json;
     Type type;
+    private View frame;
 
-    TextView t1_name;
+    /*TextView t1_name;
     TextView t1_score;
     TextView t2_name;
     TextView t2_score;
@@ -38,7 +41,7 @@ public class End extends AppCompatActivity {
     TextView t4_name;
     TextView t4_score;
     TextView t5_name;
-    TextView t5_score;
+    TextView t5_score;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class End extends AppCompatActivity {
         setContentView(R.layout.end);
         getSupportActionBar().hide(); // Disapiring of the main bar
 
-        t1_name = (TextView) findViewById(R.id.name_01);
+/*        t1_name = (TextView) findViewById(R.id.name_01);
         t1_score = (TextView) findViewById(R.id.score_01);
         t2_name = (TextView) findViewById(R.id.name_02);
         t2_score = (TextView) findViewById(R.id.score_02);
@@ -55,9 +58,51 @@ public class End extends AppCompatActivity {
         t4_name = (TextView) findViewById(R.id.name_04);
         t4_score = (TextView) findViewById(R.id.score_04);
         t5_name = (TextView) findViewById(R.id.name_05);
-        t5_score = (TextView) findViewById(R.id.score_05);
+        t5_score = (TextView) findViewById(R.id.score_05);*/
         loadData();
-        updateTopFive();
+        //updateTopFive();
+
+        frame = findViewById(R.id.frame);
+        View showScores = findViewById(R.id.show_scores);
+        View showMap = findViewById(R.id.show_map);
+
+
+        frame.setVisibility(View.INVISIBLE);
+
+
+
+
+        showScores.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                frame.setVisibility(View.VISIBLE);
+
+                ScoresFragment fragment = ScoresFragment.newInstance(list);
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.add(R.id.frame, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        showMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+/*                Intent myIntent = new Intent(End.this, MapsActivity.class);
+//                myIntent.putExtra("key", value); //Optional parameters
+                startActivity(myIntent);*/
+                //bundle activity
+
+                MapFragment fragment = MapFragment.newInstance();
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.add(R.id.frame, fragment);
+                //transaction.replace(R.id.frame, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
     }
 
     TableLayout table;
@@ -65,7 +110,7 @@ public class End extends AppCompatActivity {
     TextView tv;
     TableRow tr2;
     TextView tv2;
-    private void updateTopFive() {
+    /*private void updateTopFive() {
         if(list.size() > 0) {
             t1_name.setText(list.get(0).getPlayerName() + "");
             t1_score.setText(list.get(0).getPlayerScore() + "");
@@ -87,7 +132,7 @@ public class End extends AppCompatActivity {
             t5_score.setText(list.get(4).getPlayerScore() + "");
         }
     }
-
+*/
     //press End Game to finish the game and destroy the progress
     public void clickExit(View view) {
         moveTaskToBack(true);
@@ -95,7 +140,7 @@ public class End extends AppCompatActivity {
     }
 
     public void cliclToRestart(View view) {
-        Intent gameActivityIntent = new Intent(End.this,Game.class);
+        Intent gameActivityIntent = new Intent(End.this,Login.class);
         startActivity(gameActivityIntent);
     }
 

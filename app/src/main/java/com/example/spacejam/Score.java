@@ -6,10 +6,28 @@ import java.io.Serializable;
 class Score implements Serializable {
     private int playerScore;
     private String playerName = "";
+    private double latitude;
+    private double longitude;
 
     public Score(String playerName) {
         this.playerScore = 0;
         this.playerName.concat(playerName);
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public void setPlayerScore(int playerScore) {
