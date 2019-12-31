@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,6 +21,7 @@ import com.google.gson.Gson;
 
 public class Game extends AppCompatActivity {
 
+    private static final String USER_NAME = "Username";
     private int NUM_OF_COL = 3;
     private View hoop;
     private View enemy1;
@@ -39,9 +39,10 @@ public class Game extends AppCompatActivity {
     private TextView scoreView;
 
     Random rand;
-    Intent intent = getIntent();
-    Bundle bundle;
-    Bundle b;
+    Intent intent;
+    //Intent intent = getIntent();
+    //Bundle bundle;
+    //Bundle b;
     Score s;
     static ArrayList<Score> list = new ArrayList<Score>();
     String name;
@@ -61,10 +62,11 @@ public class Game extends AppCompatActivity {
         life_status2 = (ImageView) findViewById(R.id.life02);
         life_status3 = (ImageView) findViewById(R.id.life03);
         scoreView=findViewById(R.id.score_view);
-        bundle = getIntent().getExtras();
-        name = bundle.getString("player_name");
+//        bundle = getIntent().getExtras();
+//        name = bundle.getString("player_name");
+        name = getIntent().getStringExtra(""+USER_NAME);
         s = new Score(name);
-        b = new Bundle();
+        //b = new Bundle();
         scoreView.setText("SCORE: " + 0); //initial score
         rand = new Random();
         // Start positions

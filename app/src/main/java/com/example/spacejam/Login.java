@@ -3,26 +3,24 @@ package com.example.spacejam;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.Toast;
 
-public class Login extends AppCompatActivity {
+import com.google.android.material.textfield.TextInputLayout;
 
-    private EditText nameOfPlayer;
-    private Button play;
-    private Button exit;
-    private ImageView volume;
-    private  boolean volumeMute = false;
+public class Login extends AppCompatActivity implements View.OnClickListener {
+
+    private final String ERROR_MSG = "Unvalid Username";
+    private final String UNRECOGNIZE_CLICK_MSG = "Unrecognize Click";
+    private final String USER_NAME = "Username";
+    String usernameInput = "";
+    private TextInputLayout nameOfPlayer;
+    //private Button play;
+    //private ImageView volume;
+    private boolean volumeMute;
     private MediaPlayer loginSong;
-
     private final String bundleString = "player_name";
     Bundle bundle; // Used like a Pipe to transfer values between windows
 
@@ -31,75 +29,83 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         getSupportActionBar().hide(); // Disappearing of the main bar
+
+        volumeMute = false;
         // Play Music
         loginSong = MediaPlayer.create(getApplicationContext(), R.raw.gameon);
         loginSong.setLooping(true);
         loginSong.start();
 
-        nameOfPlayer = (EditText) findViewById(R.id.nameOfPlayer);
-        play = (Button) findViewById(R.id.btn_startGame);
-        exit = (Button) findViewById(R.id.exit);
+        nameOfPlayer = (TextInputLayout) findViewById(R.id.nameOfPlayer);
         bundle = new Bundle();
-        volume = (ImageView) findViewById(R.id.volume);
-
-        nameOfPlayer.setOnTouchListener(new View.OnTouchListener(){
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                nameOfPlayer.setHint("");
-                return false;
-            }
-        });
-        nameOfPlayer.addTextChangedListener(watcher);
+        findViewById(R.id.btn_startGame).setOnClickListener(this);
+        findViewById(R.id.volume).setOnClickListener(this);
+        findViewById(R.id.exit).setOnClickListener(this);
     }
 
-    // play and enable/disable button
-    private TextWatcher watcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String playerName = nameOfPlayer.getText().toString().trim();
-            play.setEnabled(!playerName.isEmpty());
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
-
-    public void clickToPlay(View view) {
-        Intent gameActivityIntent = new Intent(Login.this, Game.class);
-        //Add your data to bundle
-        bundle.putString(bundleString, nameOfPlayer.getText().toString());
-        gameActivityIntent.putExtras(bundle);
-        startActivity(gameActivityIntent);
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
-
-    //press End Game to finish the game and destroy the progress
-    public void clickToExit(View v) {
-        moveTaskToBack(true);
-        System.exit(0);
-
-        finish();
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
-    // Set volume ON/OFF
-    public void changeVolume(View view) {
-        if (!volumeMute){
-            volumeMute = true;
-            view.setBackgroundResource(R.drawable.volume_off);
-            loginSong.pause();
+    public void clickToPlay() {
+        if (validateUsername()) {
+            Intent gameActivityIntent = new Intent(Login.this, Game.class);
+            //Add your data to bundle
+            //bundle.putString(bundleString, nameOfPlayer.getEditText().getText().toString());
+            //gameActivityIntent.putExtras(bundle);
+            //gameActivityIntent.putExtra()
+            gameActivityIntent.putExtra(""+USER_NAME ,nameOfPlayer.getEditText().getText().toString().trim());
+            startActivity(gameActivityIntent);
+        } else
+            Toast.makeText(this, ERROR_MSG, Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean validateUsername() {
+        usernameInput = "";
+        usernameInput = nameOfPlayer.getEditText().getText().toString().trim();
+        if (usernameInput.isEmpty()) {
+            nameOfPlayer.setError("Field can't be empty");
+            return false;
+        } else if (usernameInput.length() > 20) {
+            nameOfPlayer.setError("Username too long");
+            return false;
+        } else {
+            nameOfPlayer.setError(null);
+            return true;
         }
-        else{
-            volumeMute = false;
-            view.setBackgroundResource(R.drawable.volume_on);
-            loginSong.start();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_startGame:
+                clickToPlay();
+                break;
+            case R.id.volume:
+                if (!volumeMute) {
+                    volumeMute = true;
+                    v.setBackgroundResource(R.drawable.volume_off);
+                    loginSong.pause();
+                } else {
+                    volumeMute = false;
+                    v.setBackgroundResource(R.drawable.volume_on);
+                    loginSong.start();
+                }
+                break;
+            case R.id.exit://press End Game to finish the game and destroy the progress
+                moveTaskToBack(true);
+                System.exit(0);
+                finish();
+                break;
+            default:
+                Toast.makeText(this, UNRECOGNIZE_CLICK_MSG, Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 }
