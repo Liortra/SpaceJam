@@ -2,7 +2,10 @@ package com.example.spacejam;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,9 +13,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+    private ListView list_view;
+    private ArrayList<Score> list;
+    private EditText et;
 
+    SharedPreferences sp;
+    Gson gson;
+    String json;
+    Type type;
     private GoogleMap mMap;
 
     @Override
