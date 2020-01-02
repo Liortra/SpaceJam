@@ -30,18 +30,6 @@ public class End extends AppCompatActivity {
     Gson gson;
     String json;
     Type type;
-    private View frame;
-
-    /*TextView t1_name;
-    TextView t1_score;
-    TextView t2_name;
-    TextView t2_score;
-    TextView t3_name;
-    TextView t3_score;
-    TextView t4_name;
-    TextView t4_score;
-    TextView t5_name;
-    TextView t5_score;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,99 +37,26 @@ public class End extends AppCompatActivity {
         setContentView(R.layout.end);
         getSupportActionBar().hide(); // Disapiring of the main bar
 
-/*        t1_name = (TextView) findViewById(R.id.name_01);
-        t1_score = (TextView) findViewById(R.id.score_01);
-        t2_name = (TextView) findViewById(R.id.name_02);
-        t2_score = (TextView) findViewById(R.id.score_02);
-        t3_name = (TextView) findViewById(R.id.name_03);
-        t3_score = (TextView) findViewById(R.id.score_03);
-        t4_name = (TextView) findViewById(R.id.name_04);
-        t4_score = (TextView) findViewById(R.id.score_04);
-        t5_name = (TextView) findViewById(R.id.name_05);
-        t5_score = (TextView) findViewById(R.id.score_05);*/
-        loadData();
         //updateTopFive();
 
-        frame = findViewById(R.id.frame);
-        View showScores = findViewById(R.id.show_scores);
-        View showMap = findViewById(R.id.show_map);
-
-
-        frame.setVisibility(View.INVISIBLE);
-
-
-
-
+        View showScores = findViewById(R.id.high_score);
         showScores.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                frame.setVisibility(View.VISIBLE);
 
-                ScoresFragment fragment = ScoresFragment.newInstance(list);
-                FragmentManager manager = getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.add(R.id.frame, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
             }
         });
 
-        showMap.setOnClickListener(new View.OnClickListener() {
+
+        View restart = findViewById(R.id.restart);
+        restart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*                Intent myIntent = new Intent(End.this, MapsActivity.class);
-//                myIntent.putExtra("key", value); //Optional parameters
-                startActivity(myIntent);*/
-                //bundle activity
-
-                MapFragment fragment = MapFragment.newInstance();
-                FragmentManager manager = getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.add(R.id.frame, fragment);
-                //transaction.replace(R.id.frame, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                Intent gameActivityIntent = new Intent(End.this,Login.class);
+                startActivity(gameActivityIntent);
             }
         });
-    }
 
-    TableLayout table;
-    TableRow tr;
-    TextView tv;
-    TableRow tr2;
-    TextView tv2;
-    /*private void updateTopFive() {
-        if(list.size() > 0) {
-            t1_name.setText(list.get(0).getPlayerName() + "");
-            t1_score.setText(list.get(0).getPlayerScore() + "");
-        }
-        if(list.size() > 1) {
-            t2_name.setText(list.get(1).getPlayerName() + "");
-            t2_score.setText(list.get(1).getPlayerScore() + "");
-        }
-        if(list.size() > 2) {
-            t3_name.setText(list.get(2).getPlayerName() + "");
-            t3_score.setText(list.get(2).getPlayerScore() + "");
-        }
-        if(list.size() > 3) {
-            t4_name.setText(list.get(3).getPlayerName() + "");
-            t4_score.setText(list.get(3).getPlayerScore() + "");
-        }
-        if(list.size() > 4) {
-            t5_name.setText(list.get(4).getPlayerName() + "");
-            t5_score.setText(list.get(4).getPlayerScore() + "");
-        }
-    }
-*/
-    //press End Game to finish the game and destroy the progress
-    public void clickExit(View view) {
-        moveTaskToBack(true);
-        System.exit(0);
-    }
-
-    public void cliclToRestart(View view) {
-        Intent gameActivityIntent = new Intent(End.this,Login.class);
-        startActivity(gameActivityIntent);
     }
 
     private void loadData(){

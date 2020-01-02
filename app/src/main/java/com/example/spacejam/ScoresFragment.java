@@ -17,7 +17,6 @@ import java.util.List;
 
 public class ScoresFragment extends Fragment {
 
-
     private  List<Score> scores;
     private RecyclerView recycler;
 

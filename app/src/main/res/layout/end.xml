@@ -1,64 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ending"
-    tools:context=".End">
+    tools:context=".End"
+    android:background="@drawable/ending" >
+
+    <LinearLayout
+        android:id="@+id/menu_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center"
+        android:orientation="vertical">
+
+        <TextView
+            android:fontFamily="monospace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GAME OVER"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:textSize="50dp" />
+
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="Your score is "
+            android:textStyle="bold"
+            android:layout_gravity="top|center"
+            android:padding="30dp"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"/>
 
 
-    <TextView
-        android:id="@+id/your_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="156dp"
-        android:layout_marginTop="92dp"
-        android:fontFamily="casual"
-        android:text=" Your Score is: "
-        android:textColor="@android:color/white"
-        android:textStyle="bold|italic|normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:fontFamily="monospace"
+            android:id="@+id/high_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="High Score"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp" />
 
-    <Button
-        android:id="@+id/btn_restart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="156dp"
-        android:layout_marginTop="36dp"
-        android:onClick="cliclToRestart"
-        android:text="Restart Game"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_scores" />
+        <Button
+            android:fontFamily="monospace"
+            android:id="@+id/restart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="play again?"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp" />
 
-    <Button
-        android:id="@+id/show_scores"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="36dp"
-        android:text="show_scores"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frame" />
+    </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/frame"
-        android:layout_width="200dp"
-        android:layout_height="300dp"
-        android:layout_marginStart="112dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/your_score"></FrameLayout>
+    <View
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:background="@drawable/deadturtle"/>
 
-    <Button
-        android:id="@+id/show_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="72dp"
-        android:text="show_map"
-        app:layout_constraintEnd_toStartOf="@+id/show_scores"
-        app:layout_constraintTop_toTopOf="@+id/show_scores" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

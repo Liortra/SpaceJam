@@ -9,9 +9,18 @@ class Score implements Serializable {
     private double latitude;
     private double longitude;
 
-    public Score(String playerName) {
-        this.playerScore = 0;
-        this.playerName.concat(playerName);
+    public Score(String playerName, int score, double lat, double lon) {
+        setPlayerScore(score);
+        setPlayerName(playerName);
+        setLatitude(lat);
+        setLongitude(lon);
+    }
+
+    public int compareTo(Score player){
+        if(this.playerScore > player.playerScore)
+            return 1;
+        else
+            return 0;
     }
 
     public double getLatitude() {
@@ -49,7 +58,11 @@ class Score implements Serializable {
     @NonNull
     @Override
     public String toString() {
-        return this.playerName + "-->" + this.playerScore + "\n";
+        return "Score{" +
+                "playerScore=" + playerScore +
+                ", playerName='" + playerName + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
-
 }
