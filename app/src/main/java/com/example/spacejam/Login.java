@@ -5,62 +5,75 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
+    private final String CHECKED_RADIO_BUTTON = "Checked radio button";
     private final String ERROR_MSG = "Unvalid Username";
     private final String UNRECOGNIZE_CLICK_MSG = "Unrecognize Click";
     private final String USER_NAME = "Username";
-    String usernameInput = "";
+    private String usernameInput;
     private TextInputLayout nameOfPlayer;
-    //private Button play;
-    //private ImageView volume;
     private boolean volumeMute;
     private MediaPlayer loginSong;
-    private final String bundleString = "player_name";
-    Bundle bundle; // Used like a Pipe to transfer values between windows
+    private RadioGroup radioG;
+    private Button configurations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        getSupportActionBar().hide(); // Disappearing of the main bar
 
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         volumeMute = false;
         // Play Music
         loginSong = MediaPlayer.create(getApplicationContext(), R.raw.gameon);
         loginSong.setLooping(true);
-        loginSong.start();
+        //loginSong.start();
 
         nameOfPlayer = (TextInputLayout) findViewById(R.id.nameOfPlayer);
-        bundle = new Bundle();
+        usernameInput = "";
+        radioG = (RadioGroup)findViewById(R.id.radioGroup);
+
+        configurations = (Button) findViewById(R.id.configuration);
+        configurations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onButtonShowPopupWindowClick(view);
+            }
+        });
+
         findViewById(R.id.btn_startGame).setOnClickListener(this);
         findViewById(R.id.volume).setOnClickListener(this);
         findViewById(R.id.exit).setOnClickListener(this);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+    public void onButtonShowPopupWindowClick(View view) {
 
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     public void clickToPlay() {
         if (validateUsername()) {
             Intent gameActivityIntent = new Intent(Login.this, Game.class);
-            //Add your data to bundle
-            //bundle.putString(bundleString, nameOfPlayer.getEditText().getText().toString());
-            //gameActivityIntent.putExtras(bundle);
-            //gameActivityIntent.putExtra()
-            gameActivityIntent.putExtra(""+USER_NAME ,nameOfPlayer.getEditText().getText().toString().trim());
+            gameActivityIntent.putExtra(USER_NAME, nameOfPlayer.getEditText().getText().toString().trim());
+            gameActivityIntent.putExtra(CHECKED_RADIO_BUTTON, ((RadioButton) findViewById(radioG.getCheckedRadioButtonId()))
+                    .getText().toString());
             startActivity(gameActivityIntent);
         } else
             Toast.makeText(this, ERROR_MSG, Toast.LENGTH_SHORT).show();
@@ -68,11 +81,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private boolean validateUsername() {
         usernameInput = "";
-        usernameInput = nameOfPlayer.getEditText().getText().toString().trim();
+        usernameInput += nameOfPlayer.getEditText().getText().toString().trim();
         if (usernameInput.isEmpty()) {
             nameOfPlayer.setError("Field can't be empty");
             return false;
-        } else if (usernameInput.length() > 20) {
+        } else if (usernameInput.length() > 11) {
             nameOfPlayer.setError("Username too long");
             return false;
         } else {

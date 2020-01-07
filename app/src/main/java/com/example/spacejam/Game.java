@@ -1,247 +1,364 @@
 package com.example.spacejam;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Rect;
+import android.location.Location;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.Random;
-import com.google.gson.Gson;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class Game extends AppCompatActivity {
-
+public class Game extends AppCompatActivity implements View.OnClickListener {
+    private final String CHECKED_RADIO_BUTTON = "Checked radio button";
     private static final String USER_NAME = "Username";
-    private int NUM_OF_COL = 3;
-    private View hoop;
-    private View enemy1;
-    private View enemy2;
-    private View enemy3;
+    private static final String Scores = "scores";
+    private static final String Player = "player";
+    private static final String Lat = "lat";
+    private static final String Lng = "lng";
+    private static final String basketball = "basketball";
+    private static final String monsters = "monsters";
+
+    private int FULL_LIFES = 3;         // life of the player
+    // Images of basketball life
     private ImageView life_status1;
     private ImageView life_status2;
     private ImageView life_status3;
-    private int life = 3;
-    private ValueAnimator animation1;
-    private ValueAnimator animation2;
-    private ValueAnimator animation3;
-    private int screenHeight;
-    private int score = 0;
-    private TextView scoreView;
+    private ImageView jordan;           // Image of player
+    private ImageView[] monsterArr;     // Array of all monsters and bonus
+    private TextView scoreView;         // TextView that shows player's score
 
-    Random rand;
-    Intent intent;
-    //Intent intent = getIntent();
-    //Bundle bundle;
-    //Bundle b;
-    Score s;
-    static ArrayList<Score> list = new ArrayList<Score>();
-    String name;
-    DisplayMetrics mat;
+    private static int lastDelay = 0;
+    private String finalScore;          // score to transfer to next activity
+    private double lat;                 // for GPS
+    private double lng;                 // for GPS
+    int columns;                        // Saves the no' of columns that the user choose
+    String name;                        // Usename of player
+    boolean basketball_bonus_selected;
+    private FrameLayout frame;
+    private LinearLayout parentLinearLayout;
+    // Array of all creatures in the game
+    private final int[] monsterImageArr = {R.drawable.bonus_basketball,R.drawable.monster01, R.drawable.monster02,
+            R.drawable.monster03,R.drawable.monster04,R.drawable.monster05,
+            R.drawable.monster06,R.drawable.monster07};
+    int lifes;                          // lifes during the game
+    private FusedLocationProviderClient client;
+    // Animations
+    private ValueAnimator animation;
+    private ValueAnimator[] animations;
+    // Class to help save all names,scores
+    DatabaseHelper playersDb;
+
+    Intent intnt;
+    private ImageView[] lives = new ImageView[FULL_LIFES];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
-        getSupportActionBar().hide(); // Disapiring of the main bar
 
-        hoop = (View) findViewById(R.id.hoop);
-        enemy1 = (View) findViewById(R.id.enemy1);
-        enemy2 = (View) findViewById(R.id.enemy2);
-        enemy3 = (View) findViewById(R.id.enemy3);
+        playersDb = new DatabaseHelper(this);
+        // Force user to open USER's GPS
+        gpsPermission();
+        getLocation();
+        findViewById(R.id.configuration).setOnClickListener(this);
+        findViewById(R.id.left_direction).setOnClickListener(this);
+        findViewById(R.id.right_direction).setOnClickListener(this);
+        findViewById(R.id.btn_pause).setOnClickListener(this);
+        findViewById(R.id.btn_resume).setOnClickListener(this);
+        findViewById(R.id.btn_stop).setOnClickListener(this);
+
         life_status1 = (ImageView) findViewById(R.id.life01);
         life_status2 = (ImageView) findViewById(R.id.life02);
         life_status3 = (ImageView) findViewById(R.id.life03);
-        scoreView=findViewById(R.id.score_view);
-//        bundle = getIntent().getExtras();
-//        name = bundle.getString("player_name");
-        name = getIntent().getStringExtra(""+USER_NAME);
-        s = new Score(name);
-        //b = new Bundle();
-        scoreView.setText("SCORE: " + 0); //initial score
-        rand = new Random();
-        // Start positions
-        enemy1.setTranslationY(-150);
-        enemy2.setTranslationY(-150);
-        enemy3.setTranslationY(-150);
+        lifes = FULL_LIFES;
 
-        //get screenHeight
-        mat = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(mat);
-        screenHeight = mat.heightPixels;
+        lives[0] = life_status1;
+        lives[1] = life_status2;
+        lives[2] = life_status3;
 
-        //Create Value Animation
-        animation1 = ValueAnimator.ofInt(-150,screenHeight + 400);
-        animation1.setDuration(rand.nextInt(3001) + 2000).setRepeatCount(Animation.INFINITE);
-        animation1.setStartDelay(rand.nextInt(3500) + 500);
-        animation1.start();
-        animation1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator updatedAnimation) {
-                int animatedValue = (int)updatedAnimation.getAnimatedValue();
-                enemy1.setTranslationY(animatedValue);
-                if(boom(enemy1,hoop)) {
-                    hitCheck();
-                    enemy1.setY(-150);
-                    updatedAnimation.start();
-                }
-                addScore(enemy1,updatedAnimation);
-            }
-        });
-        animation2 = ValueAnimator.ofInt(-150,screenHeight + 400);
-        animation2.setDuration(rand.nextInt(3001) + 2000).setRepeatCount(Animation.INFINITE);
-        animation2.setStartDelay(rand.nextInt(3500) + 500);
-        animation2.start();
-        animation2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator updatedAnimation) {
+        scoreView = findViewById(R.id.score_view);
+        scoreView.setText("0"); //initial score
 
-                int animatedValue = (int)updatedAnimation.getAnimatedValue();
+        intnt = getIntent();
+        // Getting number of columns that user choose.
+        columns = Integer.parseInt(intnt.getStringExtra(CHECKED_RADIO_BUTTON));
+        monsterArr = new ImageView[columns];
+        jordan =  (ImageView)findViewById(R.id.jordan);
+        if (columns % 2 == 0)
+            jordan.setX((getResources().getDisplayMetrics().widthPixels / (columns*2)));
+        createColumns(columns);
+        animations = new ValueAnimator[columns];
+        dropping(jordan);
+        name = intnt.getStringExtra(USER_NAME);
 
-                enemy2.setTranslationY(animatedValue);
-                if(boom(enemy2,hoop)) {
-                    hitCheck();
-                    enemy2.setY(-150);
-                    updatedAnimation.start();
-                }
-                addScore(enemy2,updatedAnimation);
-            }
-        });
-
-        animation3 = ValueAnimator.ofInt(-150,screenHeight + 400);
-        animation3.setDuration(rand.nextInt(3001) + 2000).setRepeatCount(Animation.INFINITE);
-        animation3.setStartDelay(rand.nextInt(3500) + 500);
-        animation3.start();
-        animation3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator updatedAnimation) {
-
-                int animatedValue = (int)updatedAnimation.getAnimatedValue();
-                enemy3.setTranslationY(animatedValue);
-                if(boom(enemy3,hoop)) {
-                    hitCheck();
-                    enemy3.setY(-150);
-                    updatedAnimation.start();
-                }
-                addScore(enemy3,updatedAnimation);
-            }
-        });
     }
 
-    private synchronized void addScore(View enemy,ValueAnimator updatedAnimation) {
-        if (enemy.getY() > hoop.getY() + hoop.getHeight()) {
-            score += 15;
-            scoreView.setText("SCORE: " + score);
-            updatedAnimation.start();
+    private void createColumns(int col) {
+        LayoutInflater inflater;
+        int randomIndex;
+
+        basketball_bonus_selected = false;
+        parentLinearLayout = findViewById(R.id.dropsLayout);
+        for (int i = 0; i < col; i++) {
+            inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.field, parentLinearLayout, false);
+            ImageView monster = rowView.findViewById(R.id.monster);
+
+            if ((i == col-1)&&(!basketball_bonus_selected)) {
+                monster.setTag(basketball);
+                randomIndex = 0;
+            }
+
+            else if((randomIndex = new Random().nextInt(monsterImageArr.length)) == 0) {
+                basketball_bonus_selected = true;
+                monster.setTag(basketball);
+            }
+            else
+                monster.setTag(monsters);
+            monster.setImageResource(monsterImageArr[randomIndex]);
+            parentLinearLayout.addView(monster, parentLinearLayout.getChildCount() - 1);
+            monsterArr[i] = monster;
         }
     }
 
-    private void pause() {
-        animation1.pause();
-        animation2.pause();
-        animation3.pause();
+    //Create each monster with its own thread
+    private void dropping(ImageView playerLocation) {
+        for (int i = 0; i < monsterArr.length; i++) {
+            if (i % 2 == 0)
+                blocksDropping(monsterArr[i], i, 0);
+            else
+                blocksDropping(monsterArr[i], i, 1);
+        }
     }
 
-    private void resume(){
-        animation1.resume();
-        animation2.resume();
-        animation3.resume();
-    }
-
-    private synchronized  void hitCheck() {
-        this.life--;
-        if (life == 0) {
-            life_status1.setVisibility(View.INVISIBLE);
-            pause();
-            s.setPlayerName(name);
-            s.setPlayerScore(score);
-            Intent gameActivityIntent = new Intent(Game.this, End.class);
-            list.add(s); // adding new user to the list
-            Collections.sort(list, new Comparator<Score>() {
-                @Override
-                public int compare(Score o1, Score o2) {
-                    return o2.getPlayerScore() - o1.getPlayerScore();
+    //Monster Drop animation and hit calculation
+    private void blocksDropping(final ImageView monster, final int i, final int delayIndex) {
+        int delay;
+        frame = findViewById(R.id.frameLayout);
+        animation = ValueAnimator.ofInt(0, getResources().getDisplayMetrics().heightPixels);
+        animation.setInterpolator(new LinearInterpolator());
+//        animation.setDuration(2000);
+        animation.setDuration(1500);
+        if (delayIndex == 0) {
+//            delay = 1000 * ((new Random().nextInt(6)) + 1);
+            delay = 1000 * ((new Random().nextInt(3)) + 1);
+            lastDelay = delay;
+            animation.setStartDelay(delay);
+        } else {
+//            delay = 1000 * (new Random().nextInt((14 - 5) + 1) + 5);
+            delay = 1000 * (new Random().nextInt(6) + 5);
+            lastDelay = delay;
+            animation.setStartDelay(delay);
+        }
+        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                monster.setVisibility(View.VISIBLE);
+                int animatedValue = (int) valueAnimator.getAnimatedValue();
+                monster.setTranslationY(animatedValue);
+                if (hit(monster, jordan)) { // Hit found
+                    if (monster.getTag().toString().equals(basketball)) { // Bonus
+                        checkLife(false);// Bonus
+                        scoreView.setText(String.valueOf(Integer.parseInt(scoreView.getText().toString()) + 25)); // for bonus add +25
+                        //monster.setImageResource(monsterImageArr[new Random().nextInt(monsterImageArr.length)]);
+                        monster.setY(0);
+                        monster.setVisibility(View.INVISIBLE);
+                        valueAnimator.start();
+                    } else {                // hit monster
+                        if(lifes == 1)
+                            gameOver();
+                        else {// Enemy
+                            int temp_score = Integer.parseInt(scoreView.getText().toString());
+                            if( temp_score >= 15)
+                                scoreView.setText(String.valueOf(Integer.parseInt(scoreView.getText().toString()) - 15));
+                            else
+                                scoreView.setText("0");
+                            checkLife(true);
+                            //monster.setImageResource(monsterImageArr[new Random().nextInt(monsterImageArr.length)]);
+                            monster.setY(0);
+                            monster.setVisibility(View.INVISIBLE);
+                            valueAnimator.start();
+                        }
+                    }
                 }
-            });
-            saveData();
-            startActivity(gameActivityIntent);
-        } else if (life == 1)
-            life_status2.setVisibility(View.INVISIBLE);
-        else
-            life_status3.setVisibility(View.INVISIBLE);
+                //Updating Score
+                if (monster.getY() > frame.getHeight()) {
+                    scoreView.setText(String.valueOf(Integer.parseInt(scoreView.getText().toString()) + 10));
+                    int randomIndex = new Random().nextInt(monsterImageArr.length);
+                    if (randomIndex == 0) {
+                        monster.setTag(basketball);
+                    } else {
+                        monster.setTag(monsters);
+                    }
+                    monster.setImageResource(monsterImageArr[randomIndex]);
+                    monster.setVisibility(View.INVISIBLE);
+                    valueAnimator.start();
+                }
+            }
+        });
+        animation.setRepeatCount(ValueAnimator.INFINITE);
+        animation.start();
+        animations[i] = animation;
+    }
+
+
+    //Check life and game over
+    private void checkLife(boolean hitMonster) {
+        if (hitMonster) { // monster
+            lifes--;
+            if (lifes > 0) {
+                lives[lifes].setVisibility(View.INVISIBLE);
+            }
+            else{
+                lives[lifes].setVisibility(View.INVISIBLE);
+                gameOver();
+                return;
+            }
+        }
+        else{
+            if (lifes <3 && lifes>0){
+                lives[lifes].setVisibility(View.VISIBLE);
+                lifes++;
+            }
+        }
+    }
+
+    public void gameOver() {
+        TextView currentScore = findViewById(R.id.score_view);
+        finalScore = currentScore.getText().toString();
+        Intent activityChangeIntent = new Intent(this, EndGame.class);
+        activityChangeIntent.putExtra(Scores, finalScore);
+        activityChangeIntent.putExtra(Player, name);
+        activityChangeIntent.putExtra(Lat, "" + lat);
+        activityChangeIntent.putExtra(Lng, "" + lng);
+        startActivity(activityChangeIntent);
+        AddData();
+        finish();
         return;
     }
-    SharedPreferences sp;
-    SharedPreferences.Editor editor;
-    Gson gson;
-    String json;
 
-    private void saveData() {
-        sp = getSharedPreferences("sp",MODE_PRIVATE);
-        editor = sp.edit();
-        gson = new Gson();
-        json = gson.toJson(list);
-        editor.putString("listOfScore",json);
-        editor.apply();
+    private void getLocation() {
+        client = LocationServices.getFusedLocationProviderClient(this);
+        client.getLastLocation().addOnSuccessListener(Game.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    lat = location.getLatitude();
+                    lng = location.getLongitude();
+                }
+            }
+        });
+
     }
 
-    private boolean boom(View e,View p) {
+    // GPS Reque
+    private void gpsPermission() {
+        ActivityCompat.requestPermissions(this,new String[] {ACCESS_FINE_LOCATION}, 1);
+    }
+
+    public void resumeAnimations(){
+        for (int i = 0; i < animations.length; i++){
+            animations[i].resume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopAnimations();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        resumeAnimations();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        gameOver();
+    }
+
+    private boolean hit(View m,View j) {
         int[] enemy_locate = new int[2];
         int[] player_locate = new int[2];
         // Computes the coordinates of this view on the screen
-        e.getLocationOnScreen(enemy_locate);
-        p.getLocationOnScreen(player_locate);
-        Rect rect1 = new Rect(enemy_locate[0], enemy_locate[1], (int) (enemy_locate[0] + e.getWidth()), (int) (enemy_locate[1] + e.getHeight()));
-        Rect rect2 = new Rect(player_locate[0], player_locate[1], (int) (player_locate[0] + p.getWidth()), (int) (player_locate[1] + p.getHeight()));
+        m.getLocationOnScreen(enemy_locate);
+        j.getLocationOnScreen(player_locate);
+        Rect rect1 = new Rect(enemy_locate[0], enemy_locate[1], (int) (enemy_locate[0] + m.getWidth()), (int) (enemy_locate[1] + m.getHeight()));
+        Rect rect2 = new Rect(player_locate[0], player_locate[1], (int) (player_locate[0] + j.getWidth()), (int) (player_locate[1] + j.getHeight()));
         return Rect.intersects(rect1, rect2);
     }
 
-    public void clickToPause(View view) {
-        pause();
-        findViewById(R.id.move_left).setVisibility(View.INVISIBLE);
-        findViewById(R.id.move_right).setVisibility(View.INVISIBLE);
-    }
-
-    public void clickToResume(View view) {
-        resume();
-        findViewById(R.id.move_left).setVisibility(View.VISIBLE);
-        findViewById(R.id.move_right).setVisibility(View.VISIBLE);
-    }
-
-    public void clickToStop(View view) {
-        pause();
-        // Opening new window
-        Intent gameActivityIntent = new Intent(Game.this, End.class);
-        s.setPlayerName(name);
-        s.setPlayerScore(score);
-        list.add(s);
-        Collections.sort(list, new Comparator<Score>() {
-            @Override
-            public int compare(Score o1, Score o2) {
-                return o2.getPlayerScore() - o1.getPlayerScore();
-            }
-        });
-        saveData();
-        gameActivityIntent.putExtra("score", score);
-        startActivity(gameActivityIntent);
+    public  void AddData() {
+        playersDb.insertData(name,
+                finalScore,
+                String.valueOf(lat), String.valueOf(lng));
     }
 
     public void clickToMoveRight(View view) {
-        if (hoop.getX() < (getResources().getDisplayMetrics().widthPixels * 2 / NUM_OF_COL))
-            hoop.setX(hoop.getX() + getResources().getDisplayMetrics().widthPixels / NUM_OF_COL);
+        if (jordan.getX() + getResources().getDisplayMetrics().widthPixels / columns < (getResources().getDisplayMetrics().widthPixels ))
+            jordan.setX(jordan.getX() + getResources().getDisplayMetrics().widthPixels / columns);
     }
 
     public void clickToMoveLeft(View view) {
-        if (hoop.getX() >= (getResources().getDisplayMetrics().widthPixels * 1 / NUM_OF_COL))
-            hoop.setX(hoop.getX() - getResources().getDisplayMetrics().widthPixels / NUM_OF_COL);
+        if (jordan.getX() >= (getResources().getDisplayMetrics().widthPixels * 1 / columns))
+            jordan.setX(jordan.getX() - getResources().getDisplayMetrics().widthPixels / columns);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.configuration:
+                break;
+            case R.id.left_direction:
+                clickToMoveLeft(v);
+                break;
+            case R.id.right_direction:
+                clickToMoveRight(v);
+                break;
+            case R.id.btn_pause:
+                onPause();
+                break;
+            case R.id.btn_resume:
+                onResume();
+                break;
+            case R.id.btn_stop:
+                onStop();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        stopAnimations();
+        gameOver();
+//        startActivity(new Intent(this, Login.class));
+//        finish();
+//        return;
+    }
+
+    private void stopAnimations() {
+        for (int i = 0; i < animations.length; i++){
+            animations[i].pause();
+        }
     }
 }

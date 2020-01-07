@@ -4,15 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/spacejam"
+    android:background="@drawable/space_jam_background"
     tools:context=".Login">
 
     // Volume
+
+<!--    <ImageView-->
+<!--        android:id="@+id/backgroundImage"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:src="@drawable/space_jam_background">-->
+
+<!--    </ImageView>-->
+
     <ImageView
         android:id="@+id/volume"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
@@ -20,117 +29,148 @@
         android:paddingTop="@android:dimen/app_icon_size">
     </ImageView>
 
+    <Button
+        android:id="@+id/configuration"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/configuration">
+    </Button>
+
     // Name
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameOfPlayer"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/volume"
         android:layout_centerInParent="true"
-        android:layout_marginTop="120dp"
-        android:background="#51FAF7F7"
+        android:layout_marginTop="210dp"
         android:hint="Username"
-        android:textAlignment="center"
-        android:textColorHint="#FF0008"
-        app:boxCollapsedPaddingTop="10dp"
+        android:textColorHint="#9AFF0000"
+        app:boxBackgroundColor="#9AFF0000"
+        app:boxStrokeColor="#9AFF0000"
         app:counterEnabled="true"
-        app:counterMaxLength="20"
-        app:errorEnabled="true">
+        app:counterMaxLength="10"
+        app:errorEnabled="true"
+        app:hintAnimationEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="300dp"
-            android:layout_height="match_parent"
+            android:layout_width="350dp"
+            android:layout_height="16pt"
             android:layout_gravity="center"
-            android:background="#E6EBE2E2"
+            android:background="#66EBE2E2"
             android:focusableInTouchMode="true"
-            android:fontFamily="@font/aclonica"
+            android:fontFamily="@font/exo_bold"
             android:inputType="text"
-            android:maxLength="21"
-            android:textColor="#000000"
-            android:textSize="20dp">
+            android:maxLength="11"
+            android:shadowColor="#9AFF0000"
+            android:textColor="#99000000"
+            android:textColorHighlight="#9AFF0000"
+            android:textColorHint="#9AFF0000"
+            android:textColorLink="#9AFF0000"
+            android:textSize="20dp"
+            android:textStyle="normal|bold">
 
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/label_of_radioBtn"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/columnLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/nameOfPlayer"
-        android:layout_marginTop="10dp"
-        android:layout_centerInParent="true"
-        android:fontFamily="@font/aclonica"
-        android:lineSpacingExtra="30sp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text=" Choose Level: "
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="#fff"
-        android:textColorHighlight="#00050505"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:typeface="monospace">
-    </TextView>
+        android:orientation="vertical"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="30dp">
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/label_of_radioBtn"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="20dp"
-        android:orientation="vertical">
-
-        <RadioButton
-            android:id="@+id/radio_3"
+        <TextView
+            android:id="@+id/label_of_radioBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:buttonTint="@android:color/background_light"
-            android:checked="true"
-            android:fontFamily="@font/aclonica"
-            android:outlineAmbientShadowColor="@android:color/white"
-            android:text=" 3 - ||| "
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/exo_bold"
+            android:text="Number Of Columns:"
             android:textColor="#FFFFFF"
-            android:textSize="30dp"
-            android:textStyle="bold" />
+            android:textSize="25dp"
+            android:textStyle="bold|normal">
 
-        <RadioButton
-            android:id="@+id/radio_4"
+        </TextView>
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:buttonTint="@android:color/background_light"
-            android:fontFamily="@font/aclonica"
-            android:text=" 4 - |||| "
-            android:textColor="#fff"
-            android:textSize="30dp"
-            android:textStyle="bold" />
+            android:layout_below="@+id/label_of_radioBtn"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/radio_5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:buttonTint="@android:color/background_light"
-            android:fontFamily="@font/aclonica"
-            android:text=" 5 - ||||| "
-            android:textColor="#fff"
-            android:textSize="30dp"
-            android:textStyle="bold" />
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/radio_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:buttonTint="@android:color/background_light"
+                android:checked="true"
+                android:fontFamily="@font/exo_bold"
+                android:outlineAmbientShadowColor="@android:color/white"
+                android:text="3"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:buttonTint="@android:color/background_light"
+                android:fontFamily="@font/exo_bold"
+                android:text="4"
+                android:textColor="#fff"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:buttonTint="@android:color/background_light"
+                android:fontFamily="@font/aclonica"
+                android:text="5"
+                android:textColor="#fff"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+            <RadioButton
+                android:id="@+id/radio_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:buttonTint="@android:color/background_light"
+                android:fontFamily="@font/aclonica"
+                android:text="6"
+                android:textColor="#fff"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+        </RadioGroup>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btn_startGame"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_below="@id/radioGroup"
+        android:layout_below="@id/columnLayout"
         android:layout_centerInParent="true"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/buttonshape"
-        android:fontFamily="@font/aclonica"
+        android:fontFamily="@font/exo_bold"
         android:shadowColor="#A8A8A8"
         android:shadowDx="0"
         android:shadowDy="0"
@@ -138,7 +178,7 @@
         android:text="Play"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
-        android:textSize="15dp"
+        android:textSize="20dp"
         android:textStyle="bold" />
 
     <Button
@@ -147,9 +187,12 @@
         android:layout_height="40dp"
         android:layout_below="@id/btn_startGame"
         android:layout_centerInParent="true"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/buttonshape"
-        android:fontFamily="@font/aclonica"
+        android:fontFamily="@font/exo_bold"
         android:shadowColor="#A8A8A8"
         android:shadowDx="0"
         android:shadowDy="0"
@@ -157,7 +200,7 @@
         android:text="Score List"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
-        android:textSize="15dp"
+        android:textSize="20dp"
         android:textStyle="bold" />
 
     <Button
@@ -166,9 +209,12 @@
         android:layout_height="40dp"
         android:layout_below="@+id/scoreList"
         android:layout_centerInParent="true"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/buttonshape"
-        android:fontFamily="@font/aclonica"
+        android:fontFamily="@font/exo_bold"
         android:shadowColor="#A8A8A8"
         android:shadowDx="0"
         android:shadowDy="0"
@@ -176,6 +222,19 @@
         android:text="EXIT"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
-        android:textSize="15dp"
+        android:textSize="20dp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/signature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#C1FAF7F7"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#020202"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:text="&#169;Lior Trachtman     &#169;Avraham Rada" />
 </RelativeLayout>
