@@ -1,155 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainGame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/court"
-    android:id="@+id/mainGame"
-    android:paddingBottom="15dp"
+    android:visibility="visible"
+    android:background="@drawable/court03"
+    android:orientation="vertical"
     tools:context=".Game">
 
-    <ImageView
-        android:id="@+id/life01"
-        android:layout_width="50dp"
-        android:layout_height="60dp"
-        android:layout_alignParentLeft="true"
-        android:src="@drawable/android_icon"/>
-    <ImageView
-        android:id="@+id/life02"
-        android:layout_width="50dp"
-        android:layout_height="60dp"
-        android:src="@drawable/android_icon"
-        android:layout_toRightOf="@id/life01"/>
-    <ImageView
-        android:id="@+id/life03"
-        android:layout_width="50dp"
-        android:layout_height="60dp"
-        android:src="@drawable/android_icon"
-        android:layout_toRightOf="@id/life02"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/score_view"
-        android:layout_width="700px"
-        android:layout_height="110px"
-        android:layout_toRightOf="@id/life03"
-        android:text=" SCORE: "
-        android:layout_alignParentTop="true"
-        android:textStyle="bold|normal"
-        android:layout_marginLeft="7dp"
-        android:textColor="@android:color/black"
-        android:textSize="20dp"
-        android:layout_marginTop="10dp"/>
+        <ImageView
+            android:id="@+id/life01"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:paddingStart="5dp"
+            android:paddingTop="5dp"
+            android:src="@drawable/life02" />
 
+        <ImageView
+            android:id="@+id/life02"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@id/life01"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:src="@drawable/life02" />
 
-    <LinearLayout
-        android:id="@+id/main_layout"
+        <ImageView
+            android:id="@+id/life03"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@id/life02"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:src="@drawable/life02" />
+
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/life03"
+            android:fontFamily="@font/exo_bold"
+            android:paddingLeft="15dp"
+            android:text="SCORE: "
+            android:textColor="#FA000000"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/score_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/score"
+            android:fontFamily="@font/exo_bold"
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="20dp" />
+        <Button
+            android:id="@+id/configuration"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/configuration">
+        </Button>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/left_direction"
+                android:layout_width="207dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
+
+            <Button
+                android:id="@+id/right_direction"
+                android:layout_width="207dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dropsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/playerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/jordan"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/jordan_03" />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/score_view"
-        android:layout_above="@id/move_left"
-        android:weightSum="3">
-        <LinearLayout
-            android:id="@+id/linear1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_below="@id/btn_stop"
-            android:layout_above="@id/move_left"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/enemy1"
-                android:layout_width="match_parent"
-                android:layout_height="200px"
-                android:src="@drawable/enemy"/>
-        </LinearLayout>
+        >
 
-        <LinearLayout
-            android:id="@+id/linear2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/move_left"
-            android:layout_below="@id/btn_stop"
-            android:layout_weight="1"
-            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/btn_stop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/stop_btn" />
 
-            <ImageView
-                android:id="@+id/enemy2"
-                android:layout_width="match_parent"
-                android:layout_height="200px"
-                android:src="@drawable/enemy2"/>
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/btn_pause"
+            android:src="@drawable/pause_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="3dp"
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@id/btn_stop"/>
 
-        <LinearLayout
-            android:id="@+id/linear3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_below="@id/btn_stop"
-            android:layout_above="@id/move_left"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/enemy3"
-                android:layout_width="match_parent"
-                android:layout_height="200px"
-                android:src="@drawable/enemy3"/>
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/btn_resume"
+            android:src="@drawable/play_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="3dp"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/btn_stop"/>
 
-    </LinearLayout>
-    <ImageView
-        android:id="@+id/hoop"
-        android:src="@drawable/hoop"
-        android:layout_width="360px"
-        android:layout_height="200px"
-        android:layout_above="@id/move_right"
-        android:layout_centerInParent="true" />
+    </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/move_left"
-        android:src="@drawable/left"
-        android:layout_width="360px"
-        android:layout_height="130px"
-        android:onClick="clickToMoveLeft"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"/>
-
-    <ImageView
-        android:id="@+id/btn_stop"
-        android:src="@drawable/stop_btn"
-        android:layout_width="50dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="3dp"
-        android:onClick="clickToStop"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"/>
-
-    <ImageView
-        android:id="@+id/btn_pause"
-        android:src="@drawable/pause_btn"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="3dp"
-        android:onClick="clickToPause"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/btn_stop"/>
-
-    <ImageView
-        android:id="@+id/btn_resume"
-        android:src="@drawable/play_btn"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="3dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/btn_stop"
-        android:onClick="clickToResume"/>
-
-    <ImageView
-        android:id="@+id/move_right"
-        android:src="@drawable/right"
-        android:layout_width="360px"
-        android:layout_height="130px"
-        android:onClick="clickToMoveRight"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" />
-
-</RelativeLayout>
+</LinearLayout>
