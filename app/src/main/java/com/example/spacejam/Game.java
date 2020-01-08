@@ -1,8 +1,10 @@
 package com.example.spacejam;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.location.Location;
 import android.os.Bundle;
@@ -17,8 +19,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,6 +35,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.widget.Toast;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -41,6 +48,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     private static final String Lng = "lng";
     private static final String basketball = "basketball";
     private static final String monsters = "monsters";
+    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 111;
 
     private int FULL_LIFES = 3;         // life of the player
     // Images of basketball life
@@ -95,8 +103,11 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
         setContentView(R.layout.game);
 
         playersDb = new DatabaseHelper(this);
+        requestPermissionn();
         // Force user to open USER's GPS
-        gpsPermission();
+        //gpsPermission();
+        client = LocationServices.getFusedLocationProviderClient(this);
+
         getLocation();
 //        baseLayout = (LinearLayout) findViewById(R.id.mainGame);
         f = (FrameLayout) findViewById(R.id.frameLayout);
@@ -264,16 +275,16 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
 //                        if(lifes == 1)
 //                            gameOver();
 //                        else {// Enemy
-                            int temp_score = Integer.parseInt(scoreView.getText().toString());
-                            if( temp_score >= 15)
-                                scoreView.setText(String.valueOf(Integer.parseInt(scoreView.getText().toString()) - 15));
-                            else
-                                scoreView.setText("0");
+                        int temp_score = Integer.parseInt(scoreView.getText().toString());
+                        if( temp_score >= 15)
+                            scoreView.setText(String.valueOf(Integer.parseInt(scoreView.getText().toString()) - 15));
+                        else
+                            scoreView.setText("0");
 //                            checkLife(true);
-                            //monster.setImageResource(monsterImageArr[new Random().nextInt(monsterImageArr.length)]);
-                            monster.setY(0);
-                            monster.setVisibility(View.INVISIBLE);
-                            valueAnimator.start();
+                        //monster.setImageResource(monsterImageArr[new Random().nextInt(monsterImageArr.length)]);
+                        monster.setY(0);
+                        monster.setVisibility(View.INVISIBLE);
+                        valueAnimator.start();
 //                        }
                     }
                 }
@@ -333,17 +344,19 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     }
 
     private void getLocation() {
-        client = LocationServices.getFusedLocationProviderClient(this);
-        client.getLastLocation().addOnSuccessListener(Game.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    lat = location.getLatitude();
-                    lng = location.getLongitude();
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            client.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        lat = location.getLatitude();
+                        lng = location.getLongitude();
+                    }
                 }
-            }
-        });
-
+            });
+        }
     }
 
     // GPS Reque
@@ -394,7 +407,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     @Override
     protected void onStop() {
         super.onStop();
-        gameOver();
+        //gameOver();
     }
 
     private boolean hit(View m,View j) {
@@ -491,5 +504,45 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    public void requestPermissionn() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+            }
+        } else {
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    client.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                lat = location.getLatitude();
+                                lng = location.getLongitude();
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
     }
 }
