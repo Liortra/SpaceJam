@@ -259,21 +259,22 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
                         monster.setY(0);
                         monster.setVisibility(View.INVISIBLE);
                         valueAnimator.start();
-                    } else {                // hit monster
-                        if(lifes == 1)
-                            gameOver();
-                        else {// Enemy
+                    } else {               // hit monster
+                        checkLife(true);
+//                        if(lifes == 1)
+//                            gameOver();
+//                        else {// Enemy
                             int temp_score = Integer.parseInt(scoreView.getText().toString());
                             if( temp_score >= 15)
                                 scoreView.setText(String.valueOf(Integer.parseInt(scoreView.getText().toString()) - 15));
                             else
                                 scoreView.setText("0");
-                            checkLife(true);
+//                            checkLife(true);
                             //monster.setImageResource(monsterImageArr[new Random().nextInt(monsterImageArr.length)]);
                             monster.setY(0);
                             monster.setVisibility(View.INVISIBLE);
                             valueAnimator.start();
-                        }
+//                        }
                     }
                 }
                 //Updating Score

@@ -38,11 +38,11 @@
         android:textSize="15sp"
         />
         </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="(Click on the players name to see their Location)"/>
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:text="(Click on the players name to see their Location)"/>-->
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,8 +50,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="TOP 5 SCORES"
-        android:textColor="#D45C34"
+        android:text="TOP 5:"
+        android:textColor="#E82196F3"
 
         android:textSize="32sp"
         android:textStyle="bold" />
@@ -81,8 +81,8 @@
         android:id="@+id/resetGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#FF9800"
-        android:text="Let's try Again" />
+        android:backgroundTint="#860686D5"
+        android:text="Play Again" />
     </LinearLayout>
 
 

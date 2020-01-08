@@ -12,8 +12,7 @@ public class EndGame extends AppCompatActivity {
     private final String Scores = "scores";
     private static final String Lat = "lat";
     private static final String Lng = "lng";
-    private
-    FragmentManager scoresFragment;
+    private FragmentManager scoresFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
