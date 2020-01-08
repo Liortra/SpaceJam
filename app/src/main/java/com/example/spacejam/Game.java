@@ -407,6 +407,8 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     @Override
     protected void onStop() {
         super.onStop();
+        stopAnimations();
+        finish();
         //gameOver();
     }
 
@@ -465,10 +467,9 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     @Override
     public void onBackPressed() {
         stopAnimations();
-        gameOver();
-//        startActivity(new Intent(this, Login.class));
-//        finish();
-//        return;
+        stopAnimations();
+        finish();
+        return;
     }
 
     private void stopAnimations() {
