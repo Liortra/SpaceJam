@@ -7,9 +7,11 @@ import android.graphics.Rect;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,6 +51,8 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     private ImageView[] monsterArr;     // Array of all monsters and bonus
     private TextView scoreView;         // TextView that shows player's score
 
+    private Button left;
+    private Button right;
     private static int lastDelay = 0;
     private String finalScore;          // score to transfer to next activity
     private double lat;                 // for GPS
@@ -75,12 +79,15 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
 
     private SensorManager sensorManager;
     private Sensor accelerometer;
-    private boolean regularMode = false;
+    private boolean regularMode;
+    private boolean musicOn;
+    private boolean vibrationOn;
     private View icon;
     private LinearLayout mainLayout;
     private Effects effects;
     private Handler handler;
     LinearLayout baseLayout;
+    FrameLayout f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,20 +98,25 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
         // Force user to open USER's GPS
         gpsPermission();
         getLocation();
-        baseLayout = (LinearLayout) findViewById(R.id.mainGame);
+//        baseLayout = (LinearLayout) findViewById(R.id.mainGame);
+        f = (FrameLayout) findViewById(R.id.frameLayout);
         effects = new Effects();
         handler = new Handler();
+        left = (Button)findViewById(R.id.left_direction);
+        right = (Button)findViewById(R.id.right_direction);
+        handleData();
+
         if(regularMode) {
 //            addClickListeners();
             findViewById(R.id.left_direction).setOnClickListener(this);
             findViewById(R.id.right_direction).setOnClickListener(this);
-            setInstructionIcon(R.drawable.clickableguide);
+//            setInstructionIcon(R.drawable.clickableguide);
         }
         else{
             setUpSensors();
-            setInstructionIcon(R.drawable.shakephone02);
+//            setInstructionIcon(R.drawable.shakephone02);
         }
-        findViewById(R.id.configuration).setOnClickListener(this);
+//        findViewById(R.id.configuration).setOnClickListener(this);
 
         findViewById(R.id.btn_pause).setOnClickListener(this);
         findViewById(R.id.btn_resume).setOnClickListener(this);
@@ -136,8 +148,15 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
 
     }
 
-    private void setUpSensors(){
+    private void handleData() {
 
+        Bundle data = getIntent().getExtras();
+        regularMode = data.getBoolean(Login.MODE);
+        musicOn = data.getBoolean(Login.MUSIC);
+        vibrationOn = data.getBoolean(Login.VIBRATION);
+    }
+
+    private void setUpSensors(){
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this,accelerometer,SensorManager.SENSOR_DELAY_GAME);
@@ -145,9 +164,11 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
 
     private void setInstructionIcon(int photo){
 
-        final int DELAY_TIME = 4 * 1000; //4 seconds to be on screen
+        final int DELAY_TIME = 2000; //1 seconds to be on screen
 
+//        RelativeLayout.LayoutParams params = new  RelativeLayout.LayoutParams(300, 300);
         RelativeLayout.LayoutParams params = new  RelativeLayout.LayoutParams(300, 300);
+//        params.gravity = Gravity.CENTER;
 
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         icon = new View(this);
@@ -155,7 +176,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
         icon.setAnimation(effects.fadeInEffect());
         icon.setLayoutParams(params);
 
-        baseLayout.addView(icon);
+        f.addView(icon);
 
         handler.postDelayed(new Runnable() {
             @Override
@@ -275,7 +296,6 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
         animations[i] = animation;
     }
 
-
     //Check life and game over
     private void checkLife(boolean hitMonster) {
         if (hitMonster) { // monster
@@ -340,12 +360,34 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     protected void onPause() {
         super.onPause();
         stopAnimations();
+        if (regularMode)
+            playerPause();
+        else
+            sensorManager.unregisterListener(this);
+    }
+
+    private void playerPause() {
+        if (left.isEnabled())
+            left.setEnabled(false);
+        if (right.isEnabled())
+            right.setEnabled(false);
+    }
+    private void playerResume() {
+        if (!left.isEnabled())
+            left.setEnabled(true);
+        if (!right.isEnabled())
+            right.setEnabled(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         resumeAnimations();
+        if (regularMode)
+            playerResume();
+        else
+            setUpSensors();
+//            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -384,8 +426,8 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.configuration:
-                break;
+//            case R.id.configuration:
+//                break;
             case R.id.left_direction:
                 clickToMoveLeft(v);
                 break;

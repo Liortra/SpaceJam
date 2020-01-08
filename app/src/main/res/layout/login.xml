@@ -7,7 +7,6 @@
     android:background="@drawable/space_jam_background"
     tools:context=".Login">
 
-
     <Button
         android:id="@+id/configuration"
         android:layout_width="30dp"
@@ -15,11 +14,10 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/configuration">
+        android:background="@drawable/configurations">
     </Button>
 
     // Name
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameOfPlayer"
         android:layout_width="wrap_content"
@@ -160,33 +158,33 @@
         android:textSize="20dp"
         android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/scoreList"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/btn_startGame"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/buttonshape"
-        android:fontFamily="@font/exo_bold"
-        android:shadowColor="#A8A8A8"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="5"
-        android:text="Score List"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+<!--    <Button-->
+<!--        android:id="@+id/scoreList"-->
+<!--        android:layout_width="300dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_below="@id/btn_startGame"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:background="@drawable/buttonshape"-->
+<!--        android:fontFamily="@font/exo_bold"-->
+<!--        android:shadowColor="#A8A8A8"-->
+<!--        android:shadowDx="0"-->
+<!--        android:shadowDy="0"-->
+<!--        android:shadowRadius="5"-->
+<!--        android:text="Score List"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textColor="#FFFFFF"-->
+<!--        android:textSize="20dp"-->
+<!--        android:textStyle="bold" />-->
 
     <Button
         android:id="@+id/exit"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_below="@+id/scoreList"
+        android:layout_below="@+id/btn_startGame"
         android:layout_centerInParent="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"

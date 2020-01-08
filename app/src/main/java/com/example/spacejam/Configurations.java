@@ -15,19 +15,25 @@ public class Configurations extends AppCompatActivity {
     private boolean musicOn;
     private boolean regularMode;
     private boolean vibrationOn;
-    private SharedPreferences sharedPreferences;
-    private final String REGULAR_MODE = "Regular Mode";
-    private final String FREE_DIVE_MODE = "Free Dive Mode";
+    private final String BUTTON_MODE = "Button Movement";
+    private final String SENSOR_MODE = "Sensors Movement";
     private final String MUSIC_ON = "Music On";
     private final String MUSIC_OFF = "Music Off";
     private final String VIBRATION_ON = "Vibration On";
     private final String VIBRATION_OFF = "Vibration Off";
     private final String SETTINGS_FILE = "SettingsFile";
 
+    private final String MUSIC = "Music";
+    private final String MODE = "Mode";
+    private final String VIBRATION = "Vibration";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.configurations_activity);
+        musicOn = true;
+        regularMode = true;
+        vibrationOn = true;
 //        getSettingsStateFromFile();
         setIds();
         setTextOnButtons();
@@ -41,41 +47,47 @@ public class Configurations extends AppCompatActivity {
         else
             musicBtn.setText(MUSIC_OFF);
         if(regularMode)
-            modeBtn.setText(REGULAR_MODE);
+            modeBtn.setText(BUTTON_MODE);
         else
-            modeBtn.setText(FREE_DIVE_MODE);
+            modeBtn.setText(SENSOR_MODE);
         if(vibrationOn)
             vibrationBtn.setText(VIBRATION_ON);
         else
             vibrationBtn.setText(VIBRATION_OFF);
     }
 
-    @Override
-    protected void onResume() {
-        if(musicOn)
-            Login.loginSong.start();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        if(musicOn)
-            Login.loginSong.pause();
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("music",musicOn);
-        editor.putBoolean("mode",regularMode);
-        editor.putBoolean("vibration",vibrationOn);
-        editor.commit();
-        super.onPause();
-    }
+//    @Override
+//    protected void onResume() {
+//        if(musicOn)
+//            Login.loginSong.start();
+//        super.onResume();
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        if(musicOn)
+//            Login.loginSong.pause();
+//
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putBoolean("music",musicOn);
+//        editor.putBoolean("mode",regularMode);
+//        editor.putBoolean("vibration",vibrationOn);
+//        editor.commit();
+//        super.onPause();
+//    }
 
     @Override
     public void onBackPressed() {
+//        Intent data = new Intent();
+////        data.putExtra(MUSIC, musicOn);
+////        data.putExtra(MODE, regularMode);
+////        data.putExtra(VIBRATION,vibrationOn);
+////        setResult(RESULT_OK, data);
+////        super.onBackPressed();
         Intent data = new Intent();
-        data.putExtra("music", musicOn);
-        data.putExtra("mode", regularMode);
-        data.putExtra("vibration",vibrationOn);
+        data.putExtra(MUSIC, musicOn);
+        data.putExtra(MODE, regularMode);
+        data.putExtra(VIBRATION,vibrationOn);
         setResult(RESULT_OK, data);
         super.onBackPressed();
     }
@@ -90,8 +102,8 @@ public class Configurations extends AppCompatActivity {
 
     private void setIds(){
         //Initialize Buttons
-        modeBtn = (Button)findViewById(R.id.mode);
         musicBtn = (Button)findViewById(R.id.music);
+        modeBtn = (Button)findViewById(R.id.mode);
         vibrationBtn = (Button)findViewById(R.id.vibration);
     }
 
@@ -115,12 +127,12 @@ public class Configurations extends AppCompatActivity {
         modeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(modeBtn.getText().toString().equals(REGULAR_MODE)){
+                if(modeBtn.getText().toString().equals(BUTTON_MODE)){
                     regularMode = false;
-                    modeBtn.setText(FREE_DIVE_MODE);
+                    modeBtn.setText(SENSOR_MODE);
                 } else {
                     regularMode = true;
-                    modeBtn.setText(REGULAR_MODE);
+                    modeBtn.setText(BUTTON_MODE);
                 }
             }
         });

@@ -27,6 +27,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private final String ERROR_MSG = "Unvalid Username";
     private final String UNRECOGNIZE_CLICK_MSG = "Unrecognize Click";
     private final String USER_NAME = "Username";
+
+    public final static String MUSIC = "Music";
+    public final static String MODE = "Mode";
+    public final static String VIBRATION = "Vibration";
+
     private String usernameInput;
     private TextInputLayout nameOfPlayer;
     private boolean volumeMute;
@@ -34,11 +39,18 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private RadioGroup radioG;
     private Button configurations;
 
+    private boolean musicOn;
+    private boolean regularMode;
+    private boolean vibrationOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+        musicOn = true;
+        regularMode = true;
+        vibrationOn = true;
         //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         volumeMute = false;
         // Play Music
@@ -51,12 +63,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         radioG = (RadioGroup)findViewById(R.id.radioGroup);
 
         configurations = (Button) findViewById(R.id.configuration);
-        configurations.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onButtonShowPopupWindowClick(view);
-            }
-        });
+//        configurations.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onButtonShowPopupWindowClick(view);
+//            }
+//        });
 
         findViewById(R.id.btn_startGame).setOnClickListener(this);
         findViewById(R.id.configuration).setOnClickListener(this);
@@ -74,6 +86,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             gameActivityIntent.putExtra(USER_NAME, nameOfPlayer.getEditText().getText().toString().trim());
             gameActivityIntent.putExtra(CHECKED_RADIO_BUTTON, ((RadioButton) findViewById(radioG.getCheckedRadioButtonId()))
                     .getText().toString());
+            gameActivityIntent.putExtra(MUSIC, musicOn);
+            gameActivityIntent.putExtra(MODE, regularMode);
+            gameActivityIntent.putExtra(VIBRATION, vibrationOn);
             startActivity(gameActivityIntent);
         } else
             Toast.makeText(this, ERROR_MSG, Toast.LENGTH_SHORT).show();
@@ -91,6 +106,23 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         } else {
             nameOfPlayer.setError(null);
             return true;
+        }
+    }
+
+    private void showSettings(){
+        Intent intent = new Intent(this, Configurations.class);
+        startActivityForResult(intent, 1);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                musicOn = data.getExtras().getBoolean(MUSIC);
+                regularMode = data.getExtras().getBoolean(MODE);
+                vibrationOn = data.getExtras().getBoolean(VIBRATION);
+            }
         }
     }
 
@@ -117,8 +149,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.configuration:
-                Intent intent = new Intent(this, Configurations.class);
-                startActivity(intent);
+                showSettings();
+//                Intent configurationActivity = new Intent(Login.this, Configurations.class);
+//                configurationActivity.putExtra(MUSIC, musicOn);
+//                configurationActivity.putExtra(MODE, regularMode);
+//                configurationActivity.putExtra(VIBRATION,vibrationOn);
+//                startActivity(configurationActivity);
                 break;
             default:
                 Toast.makeText(this, UNRECOGNIZE_CLICK_MSG, Toast.LENGTH_SHORT).show();
