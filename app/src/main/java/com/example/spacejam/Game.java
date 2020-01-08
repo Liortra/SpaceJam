@@ -372,6 +372,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
 
     @Override
     protected void onPause() {
+        Login.loginSong.pause();
         super.onPause();
         stopAnimations();
         if (regularMode)
@@ -396,6 +397,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     @Override
     protected void onResume() {
         super.onResume();
+        Login.loginSong.start();
         resumeAnimations();
         if (regularMode)
             playerResume();
@@ -406,10 +408,9 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
 
     @Override
     protected void onStop() {
+        Login.loginSong.pause();
         super.onStop();
         stopAnimations();
-        finish();
-        //gameOver();
     }
 
     private boolean hit(View m,View j) {
@@ -457,7 +458,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
                 onResume();
                 break;
             case R.id.btn_stop:
-                onStop();
+                gameOver();
                 break;
             default:
                 break;
@@ -467,7 +468,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     @Override
     public void onBackPressed() {
         stopAnimations();
-        stopAnimations();
+//        stopAnimations();
         finish();
         return;
     }

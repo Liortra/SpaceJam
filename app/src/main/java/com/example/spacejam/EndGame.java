@@ -30,6 +30,18 @@ public class EndGame extends AppCompatActivity {
 
     }
 
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        Login.loginSong.pause();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Login.loginSong.start();
+//    }
+
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, Login.class));
