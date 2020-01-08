@@ -6,12 +6,16 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -21,9 +25,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.Random;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class Game extends AppCompatActivity implements View.OnClickListener {
+public class Game extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
     private final String CHECKED_RADIO_BUTTON = "Checked radio button";
     private static final String USER_NAME = "Username";
     private static final String Scores = "scores";
@@ -42,6 +51,8 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
     private ImageView[] monsterArr;     // Array of all monsters and bonus
     private TextView scoreView;         // TextView that shows player's score
 
+    private Button left;
+    private Button right;
     private static int lastDelay = 0;
     private String finalScore;          // score to transfer to next activity
     private double lat;                 // for GPS
@@ -66,6 +77,18 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
     Intent intnt;
     private ImageView[] lives = new ImageView[FULL_LIFES];
 
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private boolean regularMode;
+    private boolean musicOn;
+    private boolean vibrationOn;
+    private View icon;
+    private LinearLayout mainLayout;
+    private Effects effects;
+    private Handler handler;
+    LinearLayout baseLayout;
+    FrameLayout f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,9 +98,26 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         // Force user to open USER's GPS
         gpsPermission();
         getLocation();
-        findViewById(R.id.configuration).setOnClickListener(this);
-        findViewById(R.id.left_direction).setOnClickListener(this);
-        findViewById(R.id.right_direction).setOnClickListener(this);
+//        baseLayout = (LinearLayout) findViewById(R.id.mainGame);
+        f = (FrameLayout) findViewById(R.id.frameLayout);
+        effects = new Effects();
+        handler = new Handler();
+        left = (Button)findViewById(R.id.left_direction);
+        right = (Button)findViewById(R.id.right_direction);
+        handleData();
+
+        if(regularMode) {
+//            addClickListeners();
+            findViewById(R.id.left_direction).setOnClickListener(this);
+            findViewById(R.id.right_direction).setOnClickListener(this);
+//            setInstructionIcon(R.drawable.clickableguide);
+        }
+        else{
+            setUpSensors();
+//            setInstructionIcon(R.drawable.shakephone02);
+        }
+//        findViewById(R.id.configuration).setOnClickListener(this);
+
         findViewById(R.id.btn_pause).setOnClickListener(this);
         findViewById(R.id.btn_resume).setOnClickListener(this);
         findViewById(R.id.btn_stop).setOnClickListener(this);
@@ -106,6 +146,46 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         dropping(jordan);
         name = intnt.getStringExtra(USER_NAME);
 
+    }
+
+    private void handleData() {
+
+        Bundle data = getIntent().getExtras();
+        regularMode = data.getBoolean(Login.MODE);
+        musicOn = data.getBoolean(Login.MUSIC);
+        vibrationOn = data.getBoolean(Login.VIBRATION);
+    }
+
+    private void setUpSensors(){
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this,accelerometer,SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    private void setInstructionIcon(int photo){
+
+        final int DELAY_TIME = 2000; //1 seconds to be on screen
+
+//        RelativeLayout.LayoutParams params = new  RelativeLayout.LayoutParams(300, 300);
+        RelativeLayout.LayoutParams params = new  RelativeLayout.LayoutParams(300, 300);
+//        params.gravity = Gravity.CENTER;
+
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        icon = new View(this);
+        icon.setBackgroundResource(photo);
+        icon.setAnimation(effects.fadeInEffect());
+        icon.setLayoutParams(params);
+
+        f.addView(icon);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                icon.setAnimation(effects.fadeOutEffect());
+                icon.setVisibility(View.INVISIBLE);
+                icon = null;
+            }
+        },DELAY_TIME);
     }
 
     private void createColumns(int col) {
@@ -216,7 +296,6 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         animations[i] = animation;
     }
 
-
     //Check life and game over
     private void checkLife(boolean hitMonster) {
         if (hitMonster) { // monster
@@ -281,12 +360,34 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
     protected void onPause() {
         super.onPause();
         stopAnimations();
+        if (regularMode)
+            playerPause();
+        else
+            sensorManager.unregisterListener(this);
+    }
+
+    private void playerPause() {
+        if (left.isEnabled())
+            left.setEnabled(false);
+        if (right.isEnabled())
+            right.setEnabled(false);
+    }
+    private void playerResume() {
+        if (!left.isEnabled())
+            left.setEnabled(true);
+        if (!right.isEnabled())
+            right.setEnabled(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         resumeAnimations();
+        if (regularMode)
+            playerResume();
+        else
+            setUpSensors();
+//            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -325,8 +426,8 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.configuration:
-                break;
+//            case R.id.configuration:
+//                break;
             case R.id.left_direction:
                 clickToMoveLeft(v);
                 break;
@@ -360,5 +461,34 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         for (int i = 0; i < animations.length; i++){
             animations[i].pause();
         }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        double screenWidth = getResources().getDisplayMetrics().widthPixels;
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            //Move Left and Right
+            if ((jordan.getX() < screenWidth - jordan.getWidth() || (int) sensorEvent.values[0] > 0)
+                    && (jordan.getX() > 0 || (int) sensorEvent.values[0] < 0 )) {
+                if ((int) sensorEvent.values[0] <= 0)
+                    moveLeftWithSensors(sensorEvent, jordan);
+                else
+                    moveRightWithSensors(sensorEvent, jordan);
+
+            }
+        }
+    }
+
+    public void moveLeftWithSensors(SensorEvent sensorEvent,ImageView senJordan) {
+        senJordan.setX((senJordan.getX() - (int) sensorEvent.values[0] + 10));
+    }
+
+    public void moveRightWithSensors(SensorEvent sensorEvent,ImageView senJordan) {
+        senJordan.setX((senJordan.getX() - (int) sensorEvent.values[0] - 10));
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }

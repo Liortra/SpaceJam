@@ -12,13 +12,14 @@ public class EndGame extends AppCompatActivity {
     private final String Scores = "scores";
     private static final String Lat = "lat";
     private static final String Lng = "lng";
+    private
     FragmentManager scoresFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        getSupportActionBar().hide();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamover);
+
         Intent intent = getIntent();
         String score = intent.getStringExtra(Scores);
         String lat = intent.getStringExtra(Lat);

@@ -16,6 +16,10 @@
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCDBJNU3zwheuVx_JtuYJ3aNu12Aizk3qE"/>
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
         <activity android:name=".Game" />
+        <activity
+            android:name=".Configurations"
+            android:label="@string/title_configuration_activity">
+        </activity>
         <activity android:name=".Login"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustNothing">

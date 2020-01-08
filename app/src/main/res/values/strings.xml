@@ -5,4 +5,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="player_score" />
+    <string name="music_off">Music OFF</string>
+    <string name="sensors_off">Sensors OFF</string>
+    <string name="music_on">Music ON</string>
+    <string name="vibration_on">Vibrations ON</string>
+    <string name="title_configuration_activity">Configuration Activity</string>
 </resources>
