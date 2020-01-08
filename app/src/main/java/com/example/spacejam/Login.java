@@ -43,6 +43,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private boolean regularMode;
     private boolean vibrationOn;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,5 +161,22 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 Toast.makeText(this, UNRECOGNIZE_CLICK_MSG, Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        Login.loginSong.pause();
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Login.loginSong.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
