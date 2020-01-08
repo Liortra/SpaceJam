@@ -193,7 +193,7 @@ public class ScoresFragment extends Fragment {
             }
         });
         currentPlayerScoreValue.setText(finalScore);
-        currentPlayerPlayed.setText(playerName);
+        currentPlayerPlayed.setText(playerName + " - ");
     }
 
 }
