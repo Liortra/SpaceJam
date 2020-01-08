@@ -1,13 +1,14 @@
 package com.example.spacejam;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -19,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,6 +36,7 @@ import android.hardware.SensorManager;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class Game extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
+    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 111;
     private final String CHECKED_RADIO_BUTTON = "Checked radio button";
     private static final String USER_NAME = "Username";
     private static final String Scores = "scores";
@@ -55,8 +59,8 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     private Button right;
     private static int lastDelay = 0;
     private String finalScore;          // score to transfer to next activity
-    private double lat;                 // for GPS
-    private double lng;                 // for GPS
+    private double lat = 32;                 // for GPS
+    private double lng = 32;                 // for GPS
     int columns;                        // Saves the no' of columns that the user choose
     String name;                        // Usename of player
     boolean basketball_bonus_selected;
@@ -88,15 +92,17 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     private Handler handler;
     LinearLayout baseLayout;
     FrameLayout f;
+    private int locationRequestCode = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestPermissionn();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
 
         playersDb = new DatabaseHelper(this);
         // Force user to open USER's GPS
-        gpsPermission();
+//        gpsPermission();
         getLocation();
 //        baseLayout = (LinearLayout) findViewById(R.id.mainGame);
         f = (FrameLayout) findViewById(R.id.frameLayout);
@@ -307,7 +313,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
             else{
                 lives[lifes].setVisibility(View.INVISIBLE);
                 gameOver();
-                return;
+//                return;
             }
         }
         else{
@@ -321,15 +327,16 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
     public void gameOver() {
         TextView currentScore = findViewById(R.id.score_view);
         finalScore = currentScore.getText().toString();
+        AddData();
         Intent activityChangeIntent = new Intent(this, EndGame.class);
         activityChangeIntent.putExtra(Scores, finalScore);
         activityChangeIntent.putExtra(Player, name);
-        activityChangeIntent.putExtra(Lat, "" + lat);
-        activityChangeIntent.putExtra(Lng, "" + lng);
+        activityChangeIntent.putExtra(Lat, String.valueOf(lat));
+        activityChangeIntent.putExtra(Lng, String.valueOf(lng));
         startActivity(activityChangeIntent);
-        AddData();
+//        AddData();
         finish();
-        return;
+//        return;
     }
 
     private void getLocation() {
@@ -340,10 +347,12 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
                 if (location != null) {
                     lat = location.getLatitude();
                     lng = location.getLongitude();
+                }else{
+                    lat = 32;
+                    lng = 32;
                 }
             }
         });
-
     }
 
     // GPS Reque
@@ -406,6 +415,20 @@ public class Game extends AppCompatActivity implements View.OnClickListener, Sen
         Rect rect1 = new Rect(enemy_locate[0], enemy_locate[1], (int) (enemy_locate[0] + m.getWidth()), (int) (enemy_locate[1] + m.getHeight()));
         Rect rect2 = new Rect(player_locate[0], player_locate[1], (int) (player_locate[0] + j.getWidth()), (int) (player_locate[1] + j.getHeight()));
         return Rect.intersects(rect1, rect2);
+    }
+    public void requestPermissionn() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+            }
+        } else {
+        }
     }
 
     public  void AddData() {
