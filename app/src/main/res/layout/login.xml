@@ -7,27 +7,6 @@
     android:background="@drawable/space_jam_background"
     tools:context=".Login">
 
-    // Volume
-
-<!--    <ImageView-->
-<!--        android:id="@+id/backgroundImage"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:src="@drawable/space_jam_background">-->
-
-<!--    </ImageView>-->
-
-    <ImageView
-        android:id="@+id/volume"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/volume_on"
-        android:paddingTop="@android:dimen/app_icon_size">
-    </ImageView>
 
     <Button
         android:id="@+id/configuration"
@@ -45,7 +24,7 @@
         android:id="@+id/nameOfPlayer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/volume"
+        android:layout_below="@id/configuration"
         android:layout_centerInParent="true"
         android:layout_marginTop="210dp"
         android:hint="Username"

@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -21,9 +23,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.Random;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class Game extends AppCompatActivity implements View.OnClickListener {
+public class Game extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
     private final String CHECKED_RADIO_BUTTON = "Checked radio button";
     private static final String USER_NAME = "Username";
     private static final String Scores = "scores";
@@ -66,6 +73,15 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
     Intent intnt;
     private ImageView[] lives = new ImageView[FULL_LIFES];
 
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private boolean regularMode = false;
+    private View icon;
+    private LinearLayout mainLayout;
+    private Effects effects;
+    private Handler handler;
+    LinearLayout baseLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,9 +91,21 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         // Force user to open USER's GPS
         gpsPermission();
         getLocation();
+        baseLayout = (LinearLayout) findViewById(R.id.mainGame);
+        effects = new Effects();
+        handler = new Handler();
+        if(regularMode) {
+//            addClickListeners();
+            findViewById(R.id.left_direction).setOnClickListener(this);
+            findViewById(R.id.right_direction).setOnClickListener(this);
+            setInstructionIcon(R.drawable.clickableguide);
+        }
+        else{
+            setUpSensors();
+            setInstructionIcon(R.drawable.shakephone02);
+        }
         findViewById(R.id.configuration).setOnClickListener(this);
-        findViewById(R.id.left_direction).setOnClickListener(this);
-        findViewById(R.id.right_direction).setOnClickListener(this);
+
         findViewById(R.id.btn_pause).setOnClickListener(this);
         findViewById(R.id.btn_resume).setOnClickListener(this);
         findViewById(R.id.btn_stop).setOnClickListener(this);
@@ -106,6 +134,37 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         dropping(jordan);
         name = intnt.getStringExtra(USER_NAME);
 
+    }
+
+    private void setUpSensors(){
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this,accelerometer,SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    private void setInstructionIcon(int photo){
+
+        final int DELAY_TIME = 4 * 1000; //4 seconds to be on screen
+
+        RelativeLayout.LayoutParams params = new  RelativeLayout.LayoutParams(300, 300);
+
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        icon = new View(this);
+        icon.setBackgroundResource(photo);
+        icon.setAnimation(effects.fadeInEffect());
+        icon.setLayoutParams(params);
+
+        baseLayout.addView(icon);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                icon.setAnimation(effects.fadeOutEffect());
+                icon.setVisibility(View.INVISIBLE);
+                icon = null;
+            }
+        },DELAY_TIME);
     }
 
     private void createColumns(int col) {
@@ -360,5 +419,34 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         for (int i = 0; i < animations.length; i++){
             animations[i].pause();
         }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        double screenWidth = getResources().getDisplayMetrics().widthPixels;
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            //Move Left and Right
+            if ((jordan.getX() < screenWidth - jordan.getWidth() || (int) sensorEvent.values[0] > 0)
+                    && (jordan.getX() > 0 || (int) sensorEvent.values[0] < 0 )) {
+                if ((int) sensorEvent.values[0] <= 0)
+                    moveLeftWithSensors(sensorEvent, jordan);
+                else
+                    moveRightWithSensors(sensorEvent, jordan);
+
+            }
+        }
+    }
+
+    public void moveLeftWithSensors(SensorEvent sensorEvent,ImageView senJordan) {
+        senJordan.setX((senJordan.getX() - (int) sensorEvent.values[0] + 10));
+    }
+
+    public void moveRightWithSensors(SensorEvent sensorEvent,ImageView senJordan) {
+        senJordan.setX((senJordan.getX() - (int) sensorEvent.values[0] - 10));
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }

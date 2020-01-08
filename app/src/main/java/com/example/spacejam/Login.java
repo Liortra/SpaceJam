@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private final String CHECKED_RADIO_BUTTON = "Checked radio button";
@@ -31,7 +30,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private String usernameInput;
     private TextInputLayout nameOfPlayer;
     private boolean volumeMute;
-    private MediaPlayer loginSong;
+    public static MediaPlayer loginSong;
     private RadioGroup radioG;
     private Button configurations;
 
@@ -45,7 +44,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         // Play Music
         loginSong = MediaPlayer.create(getApplicationContext(), R.raw.gameon);
         loginSong.setLooping(true);
-        //loginSong.start();
+        loginSong.start();
 
         nameOfPlayer = (TextInputLayout) findViewById(R.id.nameOfPlayer);
         usernameInput = "";
@@ -60,7 +59,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         });
 
         findViewById(R.id.btn_startGame).setOnClickListener(this);
-        findViewById(R.id.volume).setOnClickListener(this);
+        findViewById(R.id.configuration).setOnClickListener(this);
+//        findViewById(R.id.volume).setOnClickListener(this);
         findViewById(R.id.exit).setOnClickListener(this);
     }
 
@@ -100,21 +100,25 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             case R.id.btn_startGame:
                 clickToPlay();
                 break;
-            case R.id.volume:
-                if (!volumeMute) {
-                    volumeMute = true;
-                    v.setBackgroundResource(R.drawable.volume_off);
-                    loginSong.pause();
-                } else {
-                    volumeMute = false;
-                    v.setBackgroundResource(R.drawable.volume_on);
-                    loginSong.start();
-                }
-                break;
+//            case R.id.volume:
+//                if (!volumeMute) {
+//                    volumeMute = true;
+//                    v.setBackgroundResource(R.drawable.volume_off);
+//                    loginSong.pause();
+//                } else {
+//                    volumeMute = false;
+//                    v.setBackgroundResource(R.drawable.volume_on);
+//                    loginSong.start();
+//                }
+//                break;
             case R.id.exit://press End Game to finish the game and destroy the progress
                 moveTaskToBack(true);
                 System.exit(0);
                 finish();
+                break;
+            case R.id.configuration:
+                Intent intent = new Intent(this, Configurations.class);
+                startActivity(intent);
                 break;
             default:
                 Toast.makeText(this, UNRECOGNIZE_CLICK_MSG, Toast.LENGTH_SHORT).show();
